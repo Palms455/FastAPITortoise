@@ -79,6 +79,6 @@ register_tortoise(
     app,
     db_url="sqlite://sql_app.db", # url Базы данных
     modules={"models": ["models"], "aerich.models": ["models"]}, # Указывание моделей
-    generate_schemas=True, # Создание схемгмшсщкт
+    generate_schemas=True, # Создание схем
     add_exception_handlers=True,
 )
