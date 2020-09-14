@@ -2,9 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+tort_env/
 
 # C extensions
 *.so
+
+sql_app.db
+sql_app.db-shm
+sql_app.db-wal
+
 
 # Distribution / packaging
 .Python

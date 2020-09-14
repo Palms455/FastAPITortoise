@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import FastAPI, HTTPException
 from tortoise.contrib.fastapi import register_tortoise, HTTPNotFoundError
-import crud
+
 import schemas
 from models import UserPydantic, User, UserInPydantic, UserPydanticList, Item, ItemPydantic
 
@@ -38,10 +38,15 @@ async def get_users_list():
 @app.get("/users", response_model=List[UserPydantic])
 async def get_users():
     return await UserPydantic.from_queryset(User.all())
+    # from_queryset - сериализация списка объектов
 
 
 @app.post("/users", response_model=UserPydantic)
 async def create_user(user: UserInPydantic):
+    #  сериализация на вход UserInPydantic отличается от UserPydantic отсутствием read_only полей (не указывали id)
+    # user_obj = await User(**user.dict())
+    # user_obj.save()
+    # или так:
     user_obj = await User.create(**user.dict(exclude_unset=True))
     return await UserPydantic.from_tortoise_orm(user_obj)
 
@@ -51,8 +56,9 @@ async def create_user(user: UserInPydantic):
 )
 async def get_user(user_id: int):
     return await UserPydantic.from_queryset_single(User.get(id=user_id))
+    # from_queryset_single указание, что ожидается только одна запись
 
-
+# обновление информации о пользователе
 @app.post(
     "/user/{user_id}", response_model=UserPydantic, responses={404: {"model": HTTPNotFoundError}}
 )
@@ -71,8 +77,8 @@ async def delete_user(user_id: int):
 
 register_tortoise(
     app,
-    db_url="sqlite://sql_app.db",
-    modules={"models": ["models"], "aerich.models": ["models"]},
-    generate_schemas=True,
+    db_url="sqlite://sql_app.db", # url Базы данных
+    modules={"models": ["models"], "aerich.models": ["models"]}, # Указывание моделей
+    generate_schemas=True, # Создание схемгмшсщкт
     add_exception_handlers=True,
 )

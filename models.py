@@ -9,6 +9,7 @@ class User(models.Model):
     hashed_password = fields.CharField(max_length=1000)
     is_active = fields.BooleanField(default=True)
 
+    # При сохранении хеширование пароля по умолчанию
     async def save(self, *args, **kwargs) -> None:
         self.hashed_password = "123456"
         await super().save(*args, **kwargs)
